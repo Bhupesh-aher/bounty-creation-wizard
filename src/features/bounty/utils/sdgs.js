@@ -1,0 +1,17 @@
+export const SDG_OPTIONS = [
+  "No Poverty",
+  "Zero Hunger",
+  "Good Health",
+  "Quality Education",
+  "Gender Equality",
+  "Clean Water",
+  "Affordable Energy",
+  "Decent Work",
+  "Industry & Innovation",
+  "Reduced Inequalities",
+  "Sustainable Cities",
+  "Responsible Consumption",
+  "Climate Action",
+  "Life Below Water",
+  "Life On Land",
+];
