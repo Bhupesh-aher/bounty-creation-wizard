@@ -6,6 +6,14 @@ After publishing, the user is taken to a confirmation screen and then a final sc
 
 ---
 
+🔗 live deployment link here:
+
+```
+https://bounty-creation-wizard.vercel.app/add-bounty/basics
+```
+
+---
+
 ## 📌 Table of Contents
 
 * [App Overview](#-app-overview)
