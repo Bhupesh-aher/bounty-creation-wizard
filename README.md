@@ -59,6 +59,16 @@ All form data is stored in **Redux**, so it stays persistent across navigation. 
 
 ---
 
+---
+
+### 🎨 UX / Design Decisions
+
+- Validation errors are intentionally shown **only after the user attempts to move to the next step**, preventing cognitive overload and making the onboarding flow feel friendly rather than corrective.
+- All form data is **persisted across step navigation**, ensuring users never lose progress — a common pain point in multi-step forms.
+- Buttons remain **visible at all times and never disappear**, but navigation is disabled until the step is valid — maintaining clarity and reducing uncertainty about how to proceed.
+
+---
+
 ## 🛠 Technology Stack
 
 | Category         | Tools            |
@@ -143,7 +153,7 @@ Dev server runs at:
 npm run build
 ```
 
-### Deploy to Vercel (recommended)
+### Deploy to Vercel
 
 1. Push repo to **public GitHub**
 2. Open [https://vercel.com](https://vercel.com) → **New Project**
@@ -152,10 +162,10 @@ npm run build
 5. Build command → `npm run build`
 6. Output directory → `dist`
 
-🔗 Add live deployment link here:
+🔗 live deployment link here:
 
 ```
-https://your-project-name.vercel.app/
+https://bounty-creation-wizard.vercel.app/add-bounty/basics
 ```
 
 ---
