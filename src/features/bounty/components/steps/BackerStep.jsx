@@ -13,8 +13,6 @@ import { validateBacker } from "../../validation/backerValidation";
 import Toggle from "../../../../components/ui/Toggle";
 import TextInput from "../../../../components/ui/TextInput";
 import Checkbox from "../../../../components/ui/Checkbox";
-import Button from "../../../../components/ui/Button";
-
 import { mapPayload } from "../../utils/payloadMapper";
 
 export default function BackerStep() {
@@ -29,6 +27,7 @@ export default function BackerStep() {
 
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
 
   // validation on change
   useEffect(() => {
@@ -48,16 +47,21 @@ export default function BackerStep() {
   };
 
   const handleSubmit = () => {
-        dispatch(setSubmitting(true));
-        const finalPayload = mapPayload(bountyState);
+    if (!isValid) {
+      setShowErrors(true);
+      return;
+    }
 
-        setTimeout(() => {
-          dispatch(setSubmitting(false));
-          dispatch(setFinalPayload(finalPayload));
-          navigate("/add-bounty/confirmation");
-        }, 1500);
-      };
+    dispatch(setSubmitting(true));
 
+    const finalPayload = mapPayload(bountyState);
+
+    setTimeout(() => {
+      dispatch(setSubmitting(false));
+      dispatch(setFinalPayload(finalPayload));
+      navigate("/add-bounty/confirmation");
+    }, 1500);
+  };
 
   return (
     <>
@@ -81,7 +85,7 @@ export default function BackerStep() {
                 dispatch(updateBacker({ name: e.target.value }))
               }
               required
-              error={errors.name}
+              error={showErrors ? errors.name : ""}
             />
 
             {/* Logo Upload */}
@@ -100,22 +104,21 @@ export default function BackerStep() {
                   Selected: {backer.logo.name || backer.logo}
                 </p>
               )}
-              {errors.logo && (
+              {showErrors && errors.logo && (
                 <p className="text-xs text-red-500 mt-1">{errors.logo}</p>
               )}
             </div>
 
             <TextInput
-                label="Enter sponsor message"
-                value={backer.message}
-                onChange={(e) =>
-                  dispatch(updateBacker({ message: e.target.value }))
-                }
-                placeholder="Optional"
-                maxLength={80}
-                helperText={`${backer.message.length}/80 characters`}
-              />
-
+              label="Enter sponsor message"
+              value={backer.message}
+              onChange={(e) =>
+                dispatch(updateBacker({ message: e.target.value }))
+              }
+              placeholder="Optional"
+              maxLength={80}
+              helperText={`${backer.message.length}/80 characters`}
+            />
           </div>
         )}
 
@@ -125,35 +128,28 @@ export default function BackerStep() {
           checked={termsAccepted}
           onChange={(val) => dispatch(setTermsAccepted(val))}
         />
-        {errors.terms && (
+        {showErrors && errors.terms && (
           <p className="text-xs text-red-500 -mt-5">{errors.terms}</p>
         )}
       </div>
 
+      {/* Action buttons */}
       <div className="mt-12 flex justify-between items-center">
-            {/* Back */}
-            <button
-              type="button"
-              onClick={() => navigate("/add-bounty/rewards")}
-              className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-            >
-              ← Back
-            </button>
-
-            {/* Publish */}
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium bg-[#1677ff] text-white hover:bg-[#125fd0] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#1677ff]"
-            >
-              Publish Bounty
-            </button>
-          </div>
-
-
-
-
-
+        <button
+          type="button"
+          onClick={() => navigate("/add-bounty/rewards")}
+          className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+        >
+          ← Back
+        </button>
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium bg-[#1677ff] text-white hover:bg-[#125fd0] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#1677ff]"
+        >
+          Publish Bounty
+        </button>
+      </div>
     </>
   );
 }

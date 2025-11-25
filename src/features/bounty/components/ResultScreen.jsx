@@ -1,9 +1,17 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { resetBountyState } from "../redux/bountySlice";
+
 
 export default function ResultScreen() {
   const payload = useSelector((state) => state.bounty.meta.finalPayload);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const handleCreateAnother = () => {
+    dispatch(resetBountyState());
+    navigate("/add-bounty/basics");
+  };
 
   if (!payload) {
     return (
@@ -14,7 +22,7 @@ export default function ResultScreen() {
           </p>
           <button
             type="button"
-            onClick={() => navigate("/add-bounty/basics")}
+            onClick={handleCreateAnother}
             className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium bg-[#1677ff] text-white hover:bg-[#125fd0] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#1677ff]"
           >
             Go to Add Bounty
@@ -31,7 +39,7 @@ export default function ResultScreen() {
           <h1 className="text-xl font-semibold">Bounty JSON Payload</h1>
           <button
             type="button"
-            onClick={() => navigate("/add-bounty/basics")}
+            onClick={handleCreateAnother}
             className="text-xs px-3 py-1 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50"
           >
             Create another bounty

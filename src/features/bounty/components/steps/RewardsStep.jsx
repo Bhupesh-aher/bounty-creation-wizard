@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  updateRewards,
-  setStepValidity,
-} from "../../redux/bountySlice";
+import { updateRewards, setStepValidity } from "../../redux/bountySlice";
 import { validateRewards } from "../../validation/rewardsValidation";
 import { SDG_OPTIONS } from "../../utils/sdgs";
 
@@ -13,7 +10,6 @@ import NumberInput from "../../../../components/ui/NumberInput";
 import DateInput from "../../../../components/ui/DateInput";
 import Toggle from "../../../../components/ui/Toggle";
 import MultiSelectCheckbox from "../../../../components/ui/MultiSelectCheckbox";
-import Button from "../../../../components/ui/Button";
 
 export default function RewardsStep() {
   const dispatch = useDispatch();
@@ -22,6 +18,7 @@ export default function RewardsStep() {
   const rewards = useSelector((state) => state.bounty.rewards);
   const [errors, setErrors] = useState({});
   const [isValid, setIsValid] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
 
   // validation on every change
   useEffect(() => {
@@ -58,10 +55,14 @@ export default function RewardsStep() {
   };
 
   const handleBack = () => navigate("/add-bounty/basics");
-    const handleNext = () => {
-      navigate("/add-bounty/backer");
-    };
 
+  const handleNext = () => {
+    if (!isValid) {
+      setShowErrors(true);
+      return;
+    }
+    navigate("/add-bounty/backer");
+  };
 
   const perWinner =
     rewards.reward.amount && rewards.reward.winners
@@ -87,21 +88,21 @@ export default function RewardsStep() {
               value={rewards.reward.currency}
               onChange={handleReward("currency")}
               placeholder="USD"
-              error={errors.currency}
+              error={showErrors ? errors.currency : ""}
             />
             <NumberInput
               label="Total Reward Amount"
               required
               value={rewards.reward.amount}
               onChange={handleReward("amount")}
-              error={errors.amount}
+              error={showErrors ? errors.amount : ""}
             />
             <NumberInput
               label="Number of Winners"
               required
               value={rewards.reward.winners}
               onChange={handleReward("winners")}
-              error={errors.winners}
+              error={showErrors ? errors.winners : ""}
             />
           </div>
 
@@ -148,7 +149,7 @@ export default function RewardsStep() {
           value={rewards.timeline.expiration_date}
           onChange={handleTimeline("expiration_date")}
           required
-          error={errors.expiration_date}
+          error={showErrors ? errors.expiration_date : ""}
         />
 
         <div>
@@ -172,7 +173,7 @@ export default function RewardsStep() {
               onChange={handleEstimate("minutes")}
             />
           </div>
-          {errors.estimated && (
+          {showErrors && errors.estimated && (
             <p className="text-xs text-red-500 mt-1">{errors.estimated}</p>
           )}
         </div>
@@ -195,7 +196,7 @@ export default function RewardsStep() {
                   updateRewards({ impactBriefMessage: e.target.value })
                 )
               }
-              error={errors.impactBriefMessage}
+              error={showErrors ? errors.impactBriefMessage : ""}
               required
             />
           )}
@@ -211,29 +212,24 @@ export default function RewardsStep() {
         />
       </div>
 
-       <div className="mt-12 flex justify-between items-center">
-            {/* Back */}
-            <button
-              type="button"
-              onClick={handleBack}
-              className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-            >
-              ← Back
-            </button>
+      {/* Actions */}
+      <div className="mt-12 flex justify-between items-center">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+        >
+          ← Back
+        </button>
 
-            {/* Next */}
-            <button
-              type="button"
-              onClick={handleNext}
-              className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium bg-[#1677ff] text-white hover:bg-[#125fd0] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#1677ff]"
-            >
-              Next →
-            </button>
-          </div>
-
-
-
-
+        <button
+          type="button"
+          onClick={handleNext}
+          className="inline-flex items-center justify-center rounded-full px-6 py-2 text-sm font-medium bg-[#1677ff] text-white hover:bg-[#125fd0] focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#1677ff]"
+        >
+          Next →
+        </button>
+      </div>
     </>
   );
 }
